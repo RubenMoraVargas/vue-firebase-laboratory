@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { auth, db } from '../firebaseConfig';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
+import { createUserWithEmailAndPassword,signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged, User, GoogleAuthProvider } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import router from '../router';
 
@@ -45,6 +45,24 @@ export const useUserStore = defineStore('userStore', {
         const { user } = await signInWithEmailAndPassword(auth, email, password);
         await this.setUserRole(user.uid);
         this.userData = { email: user.email, uid: user.uid, role: this.userData?.role ?? null };
+        return true;
+      } catch (error) {
+        alert("Credenciales no válidos");
+        return false;
+      } finally {
+        this.loadingUser = false;
+      }
+    },
+    async loginWithGoogle( ): Promise<boolean> {
+      this.loadingUser = true;
+      try {
+        
+        const { user } = await signInWithPopup(auth, new GoogleAuthProvider());
+        await this.setUserRole(user.uid);
+        console.log(user)
+        debugger
+        this.userData = { email: user.email, uid: user.uid, role: this.userData?.role ?? null };
+        this.loadingUser = false;
         return true;
       } catch (error) {
         alert("Credenciales no válidos");

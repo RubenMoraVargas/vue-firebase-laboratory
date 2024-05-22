@@ -20,6 +20,13 @@ const handleSubmit = async () => {
     router.push("/");
   }
 };
+const loginWithGoogle = async () => {
+  const success = await userStore.loginWithGoogle(); 
+  if (success) {
+    await nextTick();
+    router.push("/");
+  }
+}
 </script>
 <template>
   <div class="flex items-center justify-center bg-gray-100">
@@ -40,6 +47,10 @@ const handleSubmit = async () => {
           <button type="submit" :disabled="userStore.loadingUser"
             class="w-full px-4 py-2 font-semibold text-white bg-blue-500 rounded shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
             Acceso
+          </button>
+          <button type="button" v-on:click="loginWithGoogle"
+            class="w-full mt-4 px-4 py-2 font-semibold text-white bg-blue-500 rounded shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
+            Google
           </button>
         </div>
       </form>
